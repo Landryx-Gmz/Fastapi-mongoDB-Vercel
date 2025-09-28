@@ -48,7 +48,40 @@ async def user(id:int):
     return search_user(id)
     
 
+# Post
+@app.post("/user/")
+async def user(user: User):
+    if type(search_user(user.id)) == User:
+        return {"Error!":"Usuario ya existe"}
+    else:
+        users_list.append(user)
+        return user
 
-        
+# Put
+@app.put("/user/")
+async def user(user:User):
 
+    found = False
 
+    for index, saved_user in enumerate(users_list):
+        if saved_user.id == user.id:
+            users_list[index] = user
+            found = True
+
+    if not found:
+        return{"Error!":"No se a actualizado el usuario"}
+    else:
+        return user
+
+# Delete
+@app.delete("/user/{id}")
+async def user(id:int):
+
+    found = False
+
+    for index, saved_user in enumerate(users_list):
+        if saved_user.id == id:
+            del users_list[index]
+            found = True
+    if not found:
+        return {"Error!": "No se eliminado el usuario"}
