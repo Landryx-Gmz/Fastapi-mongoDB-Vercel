@@ -58,7 +58,7 @@ async def user(user: User):
         return user
 
 # Put
-@app.put("/user/")
+@app.put("/user/",response_model=User, status_code=200)
 async def user(user:User):
 
     found = False
@@ -67,14 +67,15 @@ async def user(user:User):
         if saved_user.id == user.id:
             users_list[index] = user
             found = True
+            break
 
     if not found:
-        return{"Error!":"No se a actualizado el usuario"}
-    else:
-        return user
+        raise HTTPException(status_code=404, detail="No se a actualizado el usuario")
+    
+    return user
 
 # Delete
-@app.delete("/user/{id}")
+@app.delete("/user/{id}",status_code=200)
 async def user(id:int):
 
     found = False
@@ -82,7 +83,9 @@ async def user(id:int):
     for index, saved_user in enumerate(users_list):
         if saved_user.id == id:
             del users_list[index]
-            found = True
-            return {"OK":"El usuario a sido eliminado"}
+            found = True                    
+            break
+            
     if not found:
-        return {"Error!": "No se eliminado el usuario"}
+        raise HTTPException(status_code=404, detail=f"El usuario con ID {id} no fue encontrado.")
+    return {"message": "Usuario eliminado con éxito"}
