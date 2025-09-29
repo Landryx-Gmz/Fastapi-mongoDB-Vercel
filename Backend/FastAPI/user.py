@@ -33,7 +33,7 @@ def search_user(id: int):
         return {"Error!":"No se a encontrado el usuario"}
 
 # Path
-@app.get("/users")
+@app.get("/users",status_code=200)
 async def users():
     return users_list
 
@@ -43,7 +43,7 @@ async def user(id:int):
     return search_user(id)
 
 # Query
-@app.get("/userquery")
+@app.get("/userquery",response_model=User,status_code=200)
 async def user(id:int):
     return search_user(id)
     
