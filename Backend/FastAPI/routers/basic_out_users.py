@@ -1,10 +1,14 @@
-from fastapi import FastAPI, status, Depends, HTTPException #importamos dependecias de fastapi y httpexeptions
+from fastapi import APIRouter, status, Depends, HTTPException #importamos dependecias de fastapi y httpexeptions
 from pydantic import BaseModel
 
 # Importamos el modulo de autenticacion de fastapi (protocolo de autenticacion), (forma en la que el backen recibe el password en nuestro sistema)
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-app = FastAPI()
+router = APIRouter(
+    prefix="/bsicauth",
+    tags=["basicauth"],
+    responses={status.HTTP_404_NOT_FOUND:{"message":"No encontrado"}}
+)
 
 # Instancia de sistema de autenticacion
 oaut2 = OAuth2PasswordBearer(tokenUrl="login")
@@ -43,7 +47,7 @@ users_db ={
 def search_user_db(username: str):
     if username in users_db:
         return UserDB(**users_db[username])
-
+        
 def search_user(username: str):
     if username in users_db:
         return User(**users_db[username])
@@ -64,7 +68,7 @@ async def current_user(token: str = Depends(oaut2)):
 
 # Endpoint de autenticaion
 
-@app.post("/login")
+@router.post("/login")
 async def login(form: OAuth2PasswordRequestForm = Depends()):
     user_db = users_db.get(form.username)
     if not user_db:
@@ -78,6 +82,6 @@ async def login(form: OAuth2PasswordRequestForm = Depends()):
             detail="La contraseña no es correcta")
     return {"access_token": user.username, "token_type": "bearer"}
 
-@app.get("/users/me")
+@router.get("/users/me")
 async def me(user: User = Depends(current_user)):
     return user
