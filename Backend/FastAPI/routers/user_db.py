@@ -81,7 +81,7 @@ async def user(id:int):
 def search_user_by_email(email: str):
     
     try:
-        user = db_client.local.user.find_one({"email": email})            
-        return User(user_schema(**user))
+        user = db_client.local.users.find_one({"email": email})            
+        return User(**user_schema(user))
     except:
         return {"Error!":"No se a encontrado el usuario"}
