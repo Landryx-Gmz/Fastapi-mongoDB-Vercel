@@ -16,8 +16,7 @@ class User(BaseModel):
 users_list = [
     User(id=1, name="Andy", surname="Gomez", url="https://moure.dev", age=36),
     User(id=2, name="Rougs", surname="Mont", url="https://Rougs.com", age=35),
-    User(id=3, name="Any", surname="Gomez", url="https://Ani.es", age=27),
-]
+    User(id=3, name="Any", surname="Gomez", url="https://Ani.es", age=27),]
 
 
 @router.get("/usersjson")
