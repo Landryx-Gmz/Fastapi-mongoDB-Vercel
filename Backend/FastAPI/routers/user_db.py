@@ -25,28 +25,23 @@ async def user(id:int):
 async def user(id:int):
     return search_user(id)
 
-def search_user(id: int):
-    users = filter(lambda user: user.id ==id, users_list)
-    try:                
-        return list(users)[0]
-    except:
-        return {"Error!":"No se a encontrado el usuario"}
+
     
 
 # Post/mongodb
 @router.post("/",response_model=User, status_code=status.HTTP_201_CREATED)
 async def user(user: User):
 
-    # if type(search_user(user.id)) == User:
-    #     raise HTTPException(status_code= 409, detail="Usuario ya existe")        
-    # else:
+    if type(search_user_by_email(user.email)) == User:
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND, detail="Usuario ya existe")
+
     user_dict = dict(user)
     del user_dict["id"] #eliminamos el id para que mongo nos lo proporcione
 
     id= db_client.local.users.insert_one(user_dict).inserted_id # para acceder a mongo se hace con .local
 
     new_user = user_schema(db_client.local.users.find_one({"_id":id}))# el nombre de campo que crea mongo es _id
-
 
     return User(**new_user)
 
@@ -82,3 +77,11 @@ async def user(id:int):
     if not found:
         raise HTTPException(status_code=404, detail=f"El usuario con ID {id} no fue encontrado.")
     return {"message": "Usuario eliminado con éxito"}
+
+def search_user_by_email(email: str):
+    
+    try:
+        user = db_client.local.user.find_one({"email": email})            
+        return User(user_schema(**user))
+    except:
+        return {"Error!":"No se a encontrado el usuario"}
