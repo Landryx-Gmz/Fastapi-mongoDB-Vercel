@@ -10,9 +10,6 @@ router = APIRouter(prefix="/userdb",
                     tags=["userdb"],
                     responses={status.HTTP_404_NOT_FOUND:{"message":"No encontrado"}})
 
-# Entidad User
-
-users_list = []
 
 @router.get("/",response_model=list[User],status_code=200)
 async def users():
