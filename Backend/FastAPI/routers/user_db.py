@@ -42,7 +42,7 @@ async def user(user: User):
     user_dict = dict(user)
     del user_dict["id"] #eliminamos el id para que mongo nos lo proporcione
 
-    id= db_client.users.insert_one(user_dict).inserted_id # para acceder a mongo se hace con .local
+    id= db_client.users.insert_one(user_dict).inserted_id 
 
     new_user = user_schema(db_client.users.find_one({"_id":id}))# el nombre de campo que crea mongo es _id
 
