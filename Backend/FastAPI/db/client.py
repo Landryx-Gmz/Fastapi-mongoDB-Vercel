@@ -7,4 +7,4 @@ from pymongo import MongoClient
 
 # Base de Datos Remoto
 db_client = MongoClient(
-    "mongodb+srv://landryx_db:landryxBase@clusterpython.bvwn5bo.mongodb.net/?retryWrites=true&w=majority&appName=ClusterPython").landryx_db
+    "mongodb+srv://landryx_db:<pasword>@clusterpython.bvwn5bo.mongodb.net/?retryWrites=true&w=majority&appName=ClusterPython").landryx_db
